@@ -1,6 +1,6 @@
 from typing import Optional, List
 
-from sqlmodel import SQLModel, Field, Relationship
+from sqlmodel import SQLModel, Field, Relationship, Session, select
 
 class Thing(SQLModel, table=True):
     # item_id
@@ -8,5 +8,7 @@ class Thing(SQLModel, table=True):
     name: str
     price: float
 
-    # Relationship
-    orders: List["Order"] = Relationship(back_populates="item")
+def get_price(item_id: int, session: Session):
+    statement = select(Thing).where(Thing.id == item_id)
+    thing = session.exec(statement).one()
+    return thing.price
