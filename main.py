@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from src.api import workers
+from src.workers import workers
 from src.models import db
 
 app = FastAPI()

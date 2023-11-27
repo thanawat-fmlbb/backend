@@ -1,6 +1,7 @@
-from typing import Optional, List
+from typing import Optional
+from sqlmodel import SQLModel, Field, Session, select
 
-from sqlmodel import SQLModel, Field, Relationship, Session, select
+from src.models.db import get_engine
 
 class Thing(SQLModel, table=True):
     # item_id
@@ -8,7 +9,8 @@ class Thing(SQLModel, table=True):
     name: str
     price: float
 
-def get_price(item_id: int, session: Session):
-    statement = select(Thing).where(Thing.id == item_id)
-    thing = session.exec(statement).one()
-    return thing.price
+def get_price(item_id: int):
+    with Session(get_engine()) as session:
+        statement = select(Thing).where(Thing.id == item_id)
+        thing = session.exec(statement).one()
+        return thing.price
