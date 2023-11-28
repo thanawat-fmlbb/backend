@@ -7,6 +7,7 @@ from src.utils.celery import ChannelEnum, TaskNameEnum
 
 # entry point into the whole process
 def send_to_create_order(user_id: int, item_id: int, quantity: int):
+    print("hello from send_to_create_order")
     # might create user here, if not already created
     create_user() # not implemented
 
@@ -21,7 +22,9 @@ def send_to_create_order(user_id: int, item_id: int, quantity: int):
     }
 
     # send message to create order service
-    celery = get_celery_app(ChannelEnum.CREATE_ORDER.value)
+    # celery = get_celery_app(ChannelEnum.CREATE_ORDER.value)
+    celery = get_celery_app(ChannelEnum.INVENTORY.value)
+    print(TaskNameEnum.TEST.value)
     celery.send_task(
         # TaskNameEnum.CREATE_ORDER.value,
         TaskNameEnum.TEST.value,

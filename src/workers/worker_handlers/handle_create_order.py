@@ -4,7 +4,6 @@ from src.models.thing_model import get_price
 
 
 def handle_create_order(main_id: int, success: bool, item_id: int, quantity: int):
-    print("hello from handle_create_order")
     
     if success:
         # update order status

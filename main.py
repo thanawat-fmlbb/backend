@@ -4,7 +4,7 @@ from src.models import db
 from src.api import submit_result
 
 app = FastAPI()
-app.include_router(submit_result.router, prefix="/api")
+app.include_router(submit_result.router, prefix="/internal")
 
 
 # init database
