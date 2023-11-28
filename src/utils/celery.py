@@ -1,23 +1,37 @@
 """
 -- Note to self (and others) --
 Channel List:
-0 From Backend to CreateOrder
-1 From CreateOrder to Backend
-
-2 From Backend to Payment
-3 From Payment to Backend
-
-4 From Backend to Inventory
-5 From Inventory to Backend
-
-6 From Backend to Delivery
-7 From Delivery to Backend
+0 - backend to create_order
+1 - backend to payment
+2 - backend to inventory
+3 - backend to delivery
+4 - workers to result collector 
 """
 
 import os
-from utils.celery import Celery
+from celery import Celery
 from dotenv import load_dotenv
+from enum import Enum
 
+class ChannelEnum(Enum):
+    CREATE_ORDER = 0
+    PAYMENT = 1
+    INVENTORY = 2
+    DELIVERY = 3
+    RESULT = 4
+
+class TaskNameEnum(Enum):
+    CREATE_ORDER = "wk-create-order.tasks.create_order"
+    PAYMENT = "wk-payment.tasks.create_payment"
+    INVENTORY = "wk-inventory.tasks.check_inventory"
+    DELIVERY = "wk-delivery.tasks.deliver"
+
+    RB_CREATE_ORDER = "wk-create-order.tasks.rollback"
+    RB_PAYMENT = "wk-payment.tasks.rollback"
+    RB_INVENTORY = "wk-inventory.tasks.rollback"
+    RB_DELIVERY = "wk-delivery.tasks.rollback"
+
+    TEST = "wk-inventory.tasks.test"
 
 load_dotenv()
 REDIS_HOSTNAME = os.environ.get('REDIS_HOSTNAME', 'localhost')

@@ -16,7 +16,7 @@ class StatusEnum(str, Enum):
 
 class Order(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True) # main_id
-    status: StatusEnum = Field(default=StatusEnum.IN_PROGRESS)
+    status: StatusEnum = Field(default=StatusEnum.IN_PROGRESS.value)
     user_id: int = Field(foreign_key="user.id") # in case we needed it
 
     # Relationship
@@ -40,7 +40,7 @@ def update_order_status(
     with Session(get_engine()) as session:
         statement = select(Order).where(Order.id == main_id)
         order = session.exec(statement).one()
-        order.status = status
+        order.status = status.value
         session.add(order)
         session.commit()
         session.refresh(order)
