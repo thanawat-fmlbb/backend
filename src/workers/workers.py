@@ -22,12 +22,9 @@ def send_to_create_order(user_id: int, item_id: int, quantity: int):
     }
 
     # send message to create order service
-    # celery = get_celery_app(ChannelEnum.CREATE_ORDER.value)
-    celery = get_celery_app(ChannelEnum.INVENTORY.value)
-    print(TaskNameEnum.TEST.value)
+    celery = get_celery_app(ChannelEnum.CREATE_ORDER.value)
     celery.send_task(
-        # TaskNameEnum.CREATE_ORDER.value,
-        TaskNameEnum.TEST.value,
+        TaskNameEnum.CREATE_ORDER.value,
         kwargs=payload,
         task_id=str(order.id),
     )
