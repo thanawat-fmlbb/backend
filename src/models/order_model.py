@@ -6,13 +6,22 @@ from src.models.user_model import User
 from src.models.db import get_engine
 
 class StatusEnum(str, Enum):
+    # neutral
     IN_PROGRESS = "in_progress"
+
+    # success
     CREATE_ORDER = "create_order"
     PAYMENT = "payment"
     INVENTORY = "inventory"
     DELIVERY = "delivery"
-    FAILED = "failed"
-    COMPLETE = "complete"
+    SUCCESS = "success"
+
+    # failure
+    INSUFFICIENT_FUNDS = "insufficient_funds"
+    OUT_OF_STOCK = "out_of_stock"
+    TIMEOUT = "timeout"
+    UNKNOWN = "unknown"
+
 
 class Order(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True) # main_id
