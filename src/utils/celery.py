@@ -31,7 +31,6 @@ class TaskNameEnum(Enum):
     RB_INVENTORY = "wk-inventory.tasks.rollback"
     RB_DELIVERY = "wk-delivery.tasks.rollback"
 
-    TEST = "wk-inventory.tasks.test"
 
 load_dotenv()
 REDIS_HOSTNAME = os.environ.get('REDIS_HOSTNAME', 'localhost')
