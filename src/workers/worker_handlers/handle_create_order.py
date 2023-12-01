@@ -14,6 +14,7 @@ def handle_create_order(main_id: int, success: bool, result_payload: dict):
         payload = {
             "main_id": main_id,
             "user_id": order.user_id,
+            "item_id": item_id,
             "item_price": get_price(item_id=item_id),
             "quantity": quantity,
         }

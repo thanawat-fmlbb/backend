@@ -24,7 +24,9 @@ class TaskNameEnum(Enum):
     CREATE_ORDER = "wk-create-order.tasks.create_order"
     PAYMENT = "wk-payment.tasks.create_payment"
     INVENTORY = "wk-inventory.tasks.check_inventory"
-    DELIVERY = "wk-delivery.tasks.deliver"
+    DELIVERY = "wk-delivery.tasks.make_delivery"
+
+    PAYMENT_SUCCESS = "wk-payment.tasks.confirm_payment"
 
     RB_CREATE_ORDER = "wk-create-order.tasks.rollback"
     RB_PAYMENT = "wk-payment.tasks.rollback"

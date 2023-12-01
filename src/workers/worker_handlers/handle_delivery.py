@@ -5,15 +5,20 @@ from src.models.order_model import StatusEnum, update_order_status
 def handle_delivery(main_id: int, success: bool, result_payload: dict):
     if success:
         # update order status
-        update_order_status(main_id=main_id, status=StatusEnum.SUCCESS)
-
+        update_order_status(main_id=main_id, status=StatusEnum.DELIVERY)
+        
+        service = get_celery_app(ChannelEnum.PAYMENT.value)
+        service.send_task(
+            TaskNameEnum.PAYMENT_SUCCESS.value,
+            kwargs={ "main_id": main_id },
+            task_id=str(main_id)
+        )
     else:
         # check error type
-        # error type should not be empty since this is the last service
-        e = result_payload.get("error")
+        e = result_payload.get("error", "skip")
         if e == "timeout":
             update_order_status(main_id=main_id, status=StatusEnum.TIMEOUT)
-        else:
+        elif e != "skip":
             update_order_status(main_id=main_id, status=StatusEnum.UNKNOWN)
         
         # rollback to inventory
