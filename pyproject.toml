@@ -13,6 +13,10 @@ celery = "^5.3.6"
 sqlmodel = "^0.0.12"
 psycopg2 = "^2.9.9"
 redis = "^5.0.1"
+opentelemetry-distro = "0.40b0"
+opentelemetry-instrumentation-fastapi = "0.40b0"
+opentelemetry-instrumentation-logging = "0.40b0"
+opentelemetry-exporter-otlp = "1.19.0"
 
 
 [build-system]
