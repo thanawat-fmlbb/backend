@@ -1,41 +1,41 @@
-from src.utils.celery import get_celery_app
+from src.utils.celery import get_celery_app, ChannelEnum, TaskNameEnum
 from src.models.order_model import StatusEnum, update_order_status
 from src.models.thing_model import get_price
 
-celery = get_celery_app(0) # get result from channel 0
 
-@celery.task
-def handle_create_order(result):
-    print("hello from handle_create_order")
-    # should send back: 
-    # - main_id: int
-    # - success: bool
-    # - item_id: int    --> can be stored in db instead of sending back
-    # - quantity: int   --> can be stored in db instead of sending back
-
-    print("result: ", result)
-    main_id = result.get("main_id")
-    success = result.get("success", False)
-    item_id = result.get("item_id")
-    quantity = result.get("quantity")
-
+def handle_create_order(main_id: int, success: bool, result_payload: dict):
     if success:
+        item_id = result_payload.get("item_id")
+        quantity = result_payload.get("quantity")
+        
         # update order status
         order = update_order_status(main_id=main_id, status=StatusEnum.CREATE_ORDER)
 
         payload = {
             "main_id": main_id,
             "user_id": order.user_id,
+            "item_id": item_id,
             "item_price": get_price(item_id=item_id),
             "quantity": quantity,
         }
 
         # send message to payment service
-        service = get_celery_app(0)
-        # TODO: change task name to match + add kwargs
-        service.send_task("wk-payment.tasks.make_payment", kwargs=payload, task_id=str(main_id))
-
+        service = get_celery_app(ChannelEnum.PAYMENT.value)
+        service.send_task(
+            TaskNameEnum.PAYMENT.value,
+            kwargs=payload,
+            task_id=str(order.id),
+        )
     else:
-        # rollback
-        service = get_celery_app(0)
-        service.send_task("wk-create-order.tasks.rollback", kwargs={ "main_id": main_id }, task_id=str(main_id))
+        # should not rollback to create order again
+        # create_order should deal with status when create entity in db
+
+        # check error type
+        # if error is defined but does not match any of the cases, then UNKNOWN
+        # if error is not defined (most likely already dealt with), then SKIP
+        e = result_payload.get("error", "skip")
+        if e == StatusEnum.TIMEOUT.value:
+            update_order_status(main_id=main_id, status=StatusEnum.TIMEOUT)
+        elif e != "skip":
+            update_order_status(main_id=main_id, status=StatusEnum.UNKNOWN)
+        
