@@ -11,8 +11,8 @@ fastapi = "^0.104.1"
 uvicorn = {extras = ["standard"], version = "^0.24.0.post1"}
 celery = "^5.3.6"
 sqlmodel = "^0.0.12"
-psycopg2 = "^2.9.9"
 redis = "^5.0.1"
+psycopg2-binary = "^2.9.9"
 
 
 [build-system]
