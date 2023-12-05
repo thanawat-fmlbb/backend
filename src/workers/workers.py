@@ -7,7 +7,6 @@ from src.utils.celery import ChannelEnum, TaskNameEnum
 
 # entry point into the whole process
 def send_to_create_order(user_id: int, item_id: int, quantity: int):
-    print("hello from send_to_create_order")
     # might create user here, if not already created
     create_user() # not implemented
 
