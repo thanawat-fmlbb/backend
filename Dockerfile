@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.11
 
 WORKDIR /app
 COPY pyproject.toml poetry.lock ./
@@ -12,4 +12,4 @@ COPY src/ ./src/
 RUN poetry install --no-dev
 
 # run the application
-CMD ["poetry", "run", "uvicorn", "src.main:app"]
+CMD ["poetry", "run", "uvicorn", "src.main:app", "--log-level", "debug"]
