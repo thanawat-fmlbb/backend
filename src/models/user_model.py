@@ -17,5 +17,10 @@ def get_user_by_id(id: int):
         return session.exec(statement).one()
 
 
-def create_user():
-    pass
+def create_user(username: str, address: str) -> int:
+    with Session(get_engine()) as session:
+        user = User(username=username, address=address)
+        session.add(user)
+        session.commit()
+        session.refresh(user)
+        return user.id

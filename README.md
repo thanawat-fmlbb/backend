@@ -1,3 +1,4 @@
 
 ## RUN
-uvicorn main:app --reload
+~~uvicorn main:app --reload~~
+uvicorn src.main:app --reload
