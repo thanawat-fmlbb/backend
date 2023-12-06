@@ -1,15 +1,10 @@
-from celery import signature
 from src.utils.celery import get_celery_app
 from src.models.order_model import create_order
-from src.models.user_model import create_user
 
 from src.utils.celery import ChannelEnum, TaskNameEnum
 
 # entry point into the whole process
 def send_to_create_order(user_id: int, item_id: int, quantity: int):
-    # might create user here, if not already created
-    create_user() # not implemented
-
     # create order in db
     order = create_order(user_id=user_id)
     
