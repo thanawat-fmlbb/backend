@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Request
+from src.models.user_model import user_setup
 from src.utils.celery import get_celery_app, ChannelEnum
 
 router = APIRouter()
@@ -10,7 +11,7 @@ async def control_panel(request: Request):
 
 @router.get("/setup")
 async def service_setup():
-    
+    user_setup()
 
     # send message to create order service
     celery = get_celery_app(ChannelEnum.PAYMENT.value)
