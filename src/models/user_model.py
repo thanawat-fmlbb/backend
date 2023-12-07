@@ -24,3 +24,28 @@ def create_user(username: str, address: str) -> int:
         session.commit()
         session.refresh(user)
         return user.id
+
+def user_setup():
+    with Session(get_engine()) as session:
+        try:
+            user = session.get(User, 1)
+            if user is None:
+                user = User(id=1, username="urmom", address="address_1")
+                session.add(user)
+                session.commit()
+
+            user = session.get(User, 2)
+            if user is None:
+                user = User(id=2, username="urmom", address="address_2")
+                session.add(user)
+                session.commit()
+
+            user = session.get(User, 3)
+            if user is None:
+                user = User(id=3, username="urmom", address="timeout")
+                session.add(user)
+                session.commit()
+            return True
+        except Exception as e:
+            print(str(e))
+            return False
