@@ -14,6 +14,8 @@ sqlmodel = "^0.0.12"
 redis = "^5.0.1"
 psycopg2-binary = "^2.9.9"
 logging = "^0.4.9.6"
+opentelemetry-distro = "0.38b0"
+opentelemetry-exporter-otlp = "1.17.0"
 
 
 [build-system]

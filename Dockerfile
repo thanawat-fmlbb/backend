@@ -9,7 +9,8 @@ ENV POETRY_VERSION=1.6.1
 # installing Poetry
 RUN pip install poetry==${POETRY_VERSION} && poetry install --no-root --no-directory
 COPY src/ ./src/
-RUN poetry install --no-dev
+RUN poetry install --only main
+RUN poetry run opentelemetry-bootstrap --action=install
 
 # run the application
-CMD ["poetry", "run", "uvicorn", "src.main:app", "--log-level", "debug"]
+CMD ["poetry", "run", "opentelemetry-instrument", "uvicorn", "src.main:app", "--log-level", "debug"]
