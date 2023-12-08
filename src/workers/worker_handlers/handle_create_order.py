@@ -3,7 +3,7 @@ from src.models.order_model import StatusEnum, update_order_status
 from src.models.thing_model import get_price
 
 
-def handle_create_order(main_id: int, success: bool, result_payload: dict):
+def handle_create_order(main_id: int, success: bool, result_payload: dict, header: dict):
     if success:
         item_id = result_payload.get("item_id")
         quantity = result_payload.get("quantity")
@@ -25,6 +25,7 @@ def handle_create_order(main_id: int, success: bool, result_payload: dict):
             TaskNameEnum.PAYMENT.value,
             kwargs=payload,
             task_id=str(order.id),
+            headers=header
         )
     else:
         # should not rollback to create order again

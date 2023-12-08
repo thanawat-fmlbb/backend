@@ -2,7 +2,7 @@ from src.utils.celery import get_celery_app, ChannelEnum, TaskNameEnum
 from src.models.order_model import StatusEnum, update_order_status
 from src.models.user_model import get_user_by_id
 
-def handle_inventory(main_id: int, success: bool, result_payload: dict):
+def handle_inventory(main_id: int, success: bool, result_payload: dict, header: dict):
     if success:
         # update order status
         order = update_order_status(main_id=main_id, status=StatusEnum.INVENTORY)
@@ -20,6 +20,7 @@ def handle_inventory(main_id: int, success: bool, result_payload: dict):
             TaskNameEnum.DELIVERY.value,
             kwargs=payload,
             task_id=str(order.id),
+            headers=header
         )
 
     else:
@@ -36,5 +37,6 @@ def handle_inventory(main_id: int, success: bool, result_payload: dict):
         service.send_task(
             TaskNameEnum.RB_PAYMENT.value,
             kwargs={ "main_id": main_id },
-            task_id=str(main_id)
+            task_id=str(main_id),
+            headers=header
         )

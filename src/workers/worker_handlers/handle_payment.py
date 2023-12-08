@@ -2,7 +2,7 @@ from src.utils.celery import get_celery_app, ChannelEnum, TaskNameEnum
 from src.models.order_model import StatusEnum, update_order_status
 
 
-def handle_payment(main_id: int, success: bool, result_payload: dict):
+def handle_payment(main_id: int, success: bool, result_payload: dict, header: dict):
     if success:
         item_id = result_payload.get("item_id")
         quantity = result_payload.get("quantity")
@@ -22,6 +22,7 @@ def handle_payment(main_id: int, success: bool, result_payload: dict):
             TaskNameEnum.INVENTORY.value,
             kwargs=payload,
             task_id=str(order.id),
+            headers=header
         )
 
     else:
@@ -38,11 +39,12 @@ def handle_payment(main_id: int, success: bool, result_payload: dict):
         service.send_task(
             TaskNameEnum.RB_CREATE_ORDER.value,
             kwargs={ "main_id": main_id }, # removes error field so it skips the error check next time
-            task_id=str(main_id)
+            task_id=str(main_id),
+            headers=header
         )
 
         
-def handle_payment_confirm(main_id: int, success: bool, result_payload: dict):
+def handle_payment_confirm(main_id: int, success: bool, result_payload: dict, header: dict):
     if success:
         # update order status
         update_order_status(main_id=main_id, status=StatusEnum.SUCCESS)
@@ -61,5 +63,6 @@ def handle_payment_confirm(main_id: int, success: bool, result_payload: dict):
         service.send_task(
             TaskNameEnum.RB_DELIVERY.value,
             kwargs={ "main_id": main_id },
-            task_id=str(main_id)
+            task_id=str(main_id),
+            headers=header
         )
