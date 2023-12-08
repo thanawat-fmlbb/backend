@@ -16,6 +16,8 @@ psycopg2-binary = "^2.9.9"
 logging = "^0.4.9.6"
 opentelemetry-distro = "0.38b0"
 opentelemetry-exporter-otlp = "1.17.0"
+opentelemetry-instrumentation-celery = "0.38b0"
+opentelemetry-sdk = "1.17"
 
 
 [build-system]
